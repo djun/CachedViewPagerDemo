@@ -3,5 +3,11 @@
  used in every page limitedly cached (3 pages cached mechanism).
 
 
+2014-3-21
+1. Updated. Add some more Bitmap Source (from drawables, raw, or file url) implementing MyDataSource.
+2. Use MyBitmapSource as a bitmap storage in MyImageViewWithCache.
+3. Implement "3 pages cached mechanism" in MyViewPager.
+4. Add some pics to "assets" and "raw" folder for testing.
+
 2014-3-20
 1. Project created.
