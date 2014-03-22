@@ -4,7 +4,7 @@
 
 
 2014-3-22
-1. Update MyViewPager. Change implement of OnPageChangeListener in MyPageViewer to a private variable.
+1. Update MyViewPager. Change implement of OnPageChangeListener in MyPageViewer to a private variable. Fix some bugs.
 2. Update MainActivity. Make it can show pictures smoothly.
 
 2014-3-21

@@ -1,8 +1,10 @@
+//(c)Copyright.2014.DJun.2014-3-20 Project Created.
 package com_dot_52djun.CachedViewPagerDemo.MyViewPager;
 
 import java.util.LinkedList;
 
 import android.content.Context;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
@@ -27,9 +29,15 @@ public class MyViewPager extends ViewPager {
 		this.setOnPageChangeListener(lis);
 	}
 
-	private ViewPager.OnPageChangeListener lis = new ViewPager.OnPageChangeListener() {
+	@Override
+	public void setAdapter(PagerAdapter arg0) {
+		// TODO why this cannot solve the first page
+		// didn't load when the app opened?
+		super.setAdapter(arg0);
+		this.setCurrentItem(0);
+	}
 
-		private boolean isAtRight = false;
+	private ViewPager.OnPageChangeListener lis = new ViewPager.OnPageChangeListener() {
 
 		@Override
 		public void onPageScrollStateChanged(int state) {
@@ -39,15 +47,13 @@ public class MyViewPager extends ViewPager {
 		@Override
 		public void onPageSelected(int position) {
 			// TODO need "AsyncTask" to do these works instead
-			System.out.println("MyViewPager: onPageSelected("
-					+ String.valueOf(position) + ")");// debug
-
-			checkPageView(getChildAt(position)); // check current view first
+			// check current view first
+			checkPageView(getChildAt(position), true);
 			if (position + 1 < getChildCount()) { // then right view
-				checkPageView(getChildAt(position + 1));
+				checkPageView(getChildAt(position + 1), true);
 			}
 			if (position - 1 >= 0) { // then left view
-				checkPageView(getChildAt(position - 1));
+				checkPageView(getChildAt(position - 1), false);
 			}
 		}
 
@@ -56,27 +62,38 @@ public class MyViewPager extends ViewPager {
 
 		}
 
-		private void checkPageView(View view) {
+		private void checkPageView(View view, boolean isAtRight) {
 			if (view instanceof MyPageViewCacheController) {
 				MyPageViewCacheController c = (MyPageViewCacheController) view;
 				if (!c.hasMyResourceInitialed()
 						&& !c.isMyPersistentCacheEnabled()) {
 					c.initMyResource();
-					addAndCheckCacheQueue(c);
+					addAndCheckCacheQueue(c, isAtRight);
 				}
 			}
 		}
 
-		private void addAndCheckCacheQueue(MyPageViewCacheController controller) {
+		private void addAndCheckCacheQueue(
+				MyPageViewCacheController controller, boolean isAtRight) {
 			if (cachedViewsQueue == null) {
 				cachedViewsQueue = new LinkedList<MyPageViewCacheController>();
 			}
 
 			if (controller != null) {
-				cachedViewsQueue.add(controller);
-				if (cachedViewsQueue.size() > QUEUE_MAX_SIZE) {
-					MyPageViewCacheController c = cachedViewsQueue.remove();
-					c.releaseMyResource();
+				if (isAtRight) {
+					cachedViewsQueue.addLast(controller);
+					if (cachedViewsQueue.size() > QUEUE_MAX_SIZE) {
+						MyPageViewCacheController c = cachedViewsQueue
+								.removeFirst();
+						c.releaseMyResource();
+					}
+				} else {
+					cachedViewsQueue.addFirst(controller);
+					if (cachedViewsQueue.size() > QUEUE_MAX_SIZE) {
+						MyPageViewCacheController c = cachedViewsQueue
+								.removeLast();
+						c.releaseMyResource();
+					}
 				}
 			}
 		}

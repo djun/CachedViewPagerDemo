@@ -1,6 +1,8 @@
+//(c)Copyright.2014.DJun.2014-3-20 Project Created.
 package com_dot_52djun.CachedViewPagerDemo.MyDataSource;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
 import android.content.Context;
@@ -43,16 +45,16 @@ public class MyFileUrlBitmapSource implements MyDataSource {
 		if (cache == null || cache.get() == null) {
 			// null? create it!
 			AssetManager am = mContext.getAssets();
-			Bitmap b;
+			Bitmap b = null;
 			// url starts with http or https generally, ftp or else not
 			// supported yet.
 			if (url.startsWith(ASSETS_PATH_PREFIX)) {
 				// from assets dir
 				try {
-					b = BitmapFactory
-							.decodeStream(am.open(url
-									.substring(ASSETS_PATH_PREFIX.length())),
-									null, opts);
+					InputStream is = am.open(url.substring(ASSETS_PATH_PREFIX
+							.length()));
+					b = BitmapFactory.decodeStream(is, null, opts);
+					is.close();
 				} catch (IOException e) {
 					b = null;
 					e.printStackTrace();

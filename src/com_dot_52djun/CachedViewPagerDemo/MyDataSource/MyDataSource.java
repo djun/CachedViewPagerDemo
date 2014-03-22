@@ -1,3 +1,4 @@
+//(c)Copyright.2014.DJun.2014-3-20 Project Created.
 package com_dot_52djun.CachedViewPagerDemo.MyDataSource;
 
 public interface MyDataSource {

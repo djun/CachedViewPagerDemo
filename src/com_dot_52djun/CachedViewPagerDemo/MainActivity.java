@@ -1,3 +1,4 @@
+//(c)Copyright.2014.DJun.2014-3-20 Project Created.
 package com_dot_52djun.CachedViewPagerDemo;
 
 import java.io.IOException;
@@ -48,13 +49,13 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object object) {
-			container.removeView((View) object); // TODO
+			// TODO Auto-generated method stub
 		}
 
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
 			MyImageViewWithCache iv = new MyImageViewWithCache(context,
-					mdsList.get(position + 1));
+					mdsList.get(position));
 			container.addView(iv);
 			return iv;
 		}
@@ -66,7 +67,7 @@ public class MainActivity extends Activity {
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			return "Picture " + String.valueOf(position);
+			return "Picture " + String.valueOf(position + 1);
 		}
 	};
 
@@ -84,8 +85,6 @@ public class MainActivity extends Activity {
 		try {
 			String[] flLists = getAssets().list(PICS_FOLDER_NAME);
 			for (String file : flLists) {
-				// System.out.println("[picture loader]get pic name: " +
-				// file);// debug
 				if (needPickThisFile(file)) {
 					String path = MyFileUrlBitmapSource.ASSETS_PATH_PREFIX
 							+ PICS_FOLDER_NAME + "/" + file;

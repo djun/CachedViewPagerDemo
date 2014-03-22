@@ -1,5 +1,8 @@
+//(c)Copyright.2014.DJun.2014-3-20 Project Created.
 package com_dot_52djun.CachedViewPagerDemo.MyDataSource;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
 import android.content.Context;
@@ -38,9 +41,24 @@ public class MyRawBitmapSource implements MyDataSource {
 
 		if (cache == null || cache.get() == null) {
 			// null? create it!
-			Resources res = mContext.getResources();
-			Bitmap b = BitmapFactory.decodeStream(res.openRawResource(rId),
-					null, opts);
+			Bitmap b = null;
+			try {
+				Resources res = mContext.getResources();
+				InputStream is = res.openRawResource(rId);
+				BitmapFactory.Options opts = this.opts;
+				if (opts == null) {
+					opts = new BitmapFactory.Options();
+					opts.inPurgeable = true;
+					opts.inInputShareable = true;
+				}
+				b = BitmapFactory.decodeStream(is, null, opts);
+
+				is.close();
+			} catch (IOException e) {
+				b = null;
+				e.printStackTrace();
+			}
+
 			if (b != null) {
 				cache = new WeakReference<Bitmap>(b);
 			}
