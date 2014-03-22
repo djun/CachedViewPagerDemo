@@ -12,6 +12,7 @@ public class MyImageViewWithCache extends ImageView implements
 
 	private MyDataSource mDataSource;
 	private boolean myResourceInitialed = false;
+	private Bitmap noPictureBitmap;
 
 	public MyImageViewWithCache(Context context, AttributeSet attrs,
 			int defStyle) {
@@ -29,6 +30,14 @@ public class MyImageViewWithCache extends ImageView implements
 	public MyImageViewWithCache(Context context, MyDataSource source) {
 		super(context);
 		this.mDataSource = source;
+	}
+
+	public Bitmap getNoPictureBitmap() {
+		return noPictureBitmap;
+	}
+
+	public void setNoPictureBitmap(Bitmap noPictureBitmap) {
+		this.noPictureBitmap = noPictureBitmap;
 	}
 
 	private boolean myPersistentCacheEnabled = false;
@@ -56,6 +65,8 @@ public class MyImageViewWithCache extends ImageView implements
 			mDataSource.drop();
 			myResourceInitialed = false;
 		}
+
+		this.setImageBitmap(noPictureBitmap);
 	}
 
 	@Override

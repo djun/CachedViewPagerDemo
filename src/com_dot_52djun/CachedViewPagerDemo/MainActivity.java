@@ -1,13 +1,18 @@
 package com_dot_52djun.CachedViewPagerDemo;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
 import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
 
+import com_dot_52djun.CachedViewPagerDemo.MyDataSource.MyDataSource;
 import com_dot_52djun.CachedViewPagerDemo.MyDataSource.MyFileUrlBitmapSource;
 import com_dot_52djun.CachedViewPagerDemo.MyDataSource.MyRawBitmapSource;
 import com_dot_52djun.CachedViewPagerDemo.MyPageView.MyImageViewWithCache;
@@ -20,6 +25,51 @@ public class MainActivity extends Activity {
 
 	private static final String PICS_FOLDER_NAME = "pics";
 
+	// this Adapter class is for testing MyPageViewer
+	private class MyPagerAdapter extends PagerAdapter {
+
+		private Context context;
+		private ArrayList<MyDataSource> mdsList;
+
+		public MyPagerAdapter(Context context, ArrayList<MyDataSource> list) {
+			this.context = context;
+			this.mdsList = list;
+		}
+
+		@Override
+		public int getCount() {
+			return mdsList.size();
+		}
+
+		@Override
+		public boolean isViewFromObject(View arg0, Object arg1) {
+			return arg0 == arg1;
+		}
+
+		@Override
+		public void destroyItem(ViewGroup container, int position, Object object) {
+			container.removeView((View) object); // TODO
+		}
+
+		@Override
+		public Object instantiateItem(ViewGroup container, int position) {
+			MyImageViewWithCache iv = new MyImageViewWithCache(context,
+					mdsList.get(position + 1));
+			container.addView(iv);
+			return iv;
+		}
+
+		@Override
+		public int getItemPosition(Object object) {
+			return super.getItemPosition(object);
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return "Picture " + String.valueOf(position);
+		}
+	};
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -28,7 +78,9 @@ public class MainActivity extends Activity {
 		this.mContext = this;
 		// find views
 		mViewPager = (MyViewPager) findViewById(R.id.viewpager);
-		// pick pics in assets folder and put into my view pager
+		// will put pics into an ArrayList
+		ArrayList<MyDataSource> mdsList = new ArrayList<MyDataSource>();
+		// pick pics in assets
 		try {
 			String[] flLists = getAssets().list(PICS_FOLDER_NAME);
 			for (String file : flLists) {
@@ -37,24 +89,23 @@ public class MainActivity extends Activity {
 				if (needPickThisFile(file)) {
 					String path = MyFileUrlBitmapSource.ASSETS_PATH_PREFIX
 							+ PICS_FOLDER_NAME + "/" + file;
-					MyImageViewWithCache iv = new MyImageViewWithCache(
-							mContext, new MyFileUrlBitmapSource(mContext, path));
-					mViewPager.addView(iv);
+					mdsList.add(new MyFileUrlBitmapSource(mContext, path));
 				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		// pick pics in raw folder and put into my view pager
+		// pick pics in raw folder
 		for (int i = 1; i <= 5; ++i) {
-			int rId = getResources().getIdentifier(
-					"r" + String.valueOf(i) + ".jpg", "raw", getPackageName());
+			int rId = getResources().getIdentifier("r" + String.valueOf(i),
+					"raw", getPackageName());
 			if (rId != 0) {
-				MyImageViewWithCache iv = new MyImageViewWithCache(mContext,
-						new MyRawBitmapSource(mContext, rId));
-				mViewPager.addView(iv);
+				mdsList.add(new MyRawBitmapSource(mContext, rId));
 			}
 		}
+		// make and set adapter
+		MyPagerAdapter adapter = new MyPagerAdapter(mContext, mdsList);
+		mViewPager.setAdapter(adapter);
 	}
 
 	@SuppressLint("DefaultLocale")

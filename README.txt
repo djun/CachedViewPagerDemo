@@ -3,6 +3,10 @@
  used in every page limitedly cached (3 pages cached mechanism).
 
 
+2014-3-22
+1. Update MyViewPager. Change implement of OnPageChangeListener in MyPageViewer to a private variable.
+2. Update MainActivity. Make it can show pictures smoothly.
+
 2014-3-21
 1. Updated. Add some more Bitmap Source (from drawables, raw, or file url) implementing MyDataSource.
 2. Use MyBitmapSource as a bitmap storage in MyImageViewWithCache.
