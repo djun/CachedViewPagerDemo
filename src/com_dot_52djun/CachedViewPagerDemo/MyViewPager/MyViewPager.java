@@ -31,10 +31,7 @@ public class MyViewPager extends ViewPager {
 
 	@Override
 	public void setAdapter(PagerAdapter arg0) {
-		// TODO why this cannot solve the first page
-		// didn't load when the app opened?
 		super.setAdapter(arg0);
-		this.setCurrentItem(0);
 	}
 
 	private ViewPager.OnPageChangeListener lis = new ViewPager.OnPageChangeListener() {
@@ -46,13 +43,18 @@ public class MyViewPager extends ViewPager {
 
 		@Override
 		public void onPageSelected(int position) {
+			System.out.println("page count=" + getChildCount() + ",position="
+					+ position);// debug
+
 			// TODO need "AsyncTask" to do these works instead
 			// check current view first
 			checkPageView(getChildAt(position), true);
-			if (position + 1 < getChildCount()) { // then right view
+			// then right view
+			if (position + 1 < getChildCount()) {
 				checkPageView(getChildAt(position + 1), true);
 			}
-			if (position - 1 >= 0) { // then left view
+			// then left view
+			if (position - 1 >= 0) {
 				checkPageView(getChildAt(position - 1), false);
 			}
 		}

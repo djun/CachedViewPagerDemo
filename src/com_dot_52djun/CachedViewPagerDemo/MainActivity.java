@@ -31,6 +31,7 @@ public class MainActivity extends Activity {
 
 		private Context context;
 		private ArrayList<MyDataSource> mdsList;
+		private ArrayList<View> vList;
 
 		public MyPagerAdapter(Context context, ArrayList<MyDataSource> list) {
 			this.context = context;
@@ -50,14 +51,28 @@ public class MainActivity extends Activity {
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object object) {
 			// TODO Auto-generated method stub
+			// container.removeView((View) object);
 		}
 
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
-			MyImageViewWithCache iv = new MyImageViewWithCache(context,
-					mdsList.get(position));
-			container.addView(iv);
-			return iv;
+			if (vList == null) {
+				vList = new ArrayList<View>();
+			}
+
+			if (position >= vList.size()) {
+				MyImageViewWithCache iv = new MyImageViewWithCache(context,
+						mdsList.get(position));
+				vList.add(iv);
+				container.addView(iv);
+
+				// for first page
+				if (position == 0) {
+					iv.setEnableMyPersistentCache(true);
+				}
+			}
+
+			return vList.get(position);
 		}
 
 		@Override

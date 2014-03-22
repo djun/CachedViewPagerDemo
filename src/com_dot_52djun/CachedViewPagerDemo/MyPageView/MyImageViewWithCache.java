@@ -3,6 +3,7 @@ package com_dot_52djun.CachedViewPagerDemo.MyPageView;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -14,6 +15,27 @@ public class MyImageViewWithCache extends ImageView implements
 	private MyDataSource mDataSource;
 	private boolean myResourceInitialed = false;
 	private Bitmap noPictureBitmap;
+
+	private class MyImageViewAsyncTask extends AsyncTask<Object, Void, Bitmap> {
+
+		private MyImageViewWithCache iv;
+
+		@Override
+		protected Bitmap doInBackground(Object... params) {
+			iv = (MyImageViewWithCache) params[0];
+			MyDataSource dataSource = (MyDataSource) params[1];
+			Bitmap b = (Bitmap) dataSource.get();
+			return b;
+		}
+
+		@Override
+		protected void onPostExecute(Bitmap result) {
+			if (result != null) {
+				iv.setImageBitmap(result);
+			}
+		}
+
+	}
 
 	public MyImageViewWithCache(Context context, AttributeSet attrs,
 			int defStyle) {
@@ -53,21 +75,29 @@ public class MyImageViewWithCache extends ImageView implements
 
 	@Override
 	public synchronized void initMyResource() {
-		if (mDataSource != null) {
-			Bitmap b = (Bitmap) mDataSource.get();
-			this.setImageBitmap(b);
+		if (mDataSource != null && !hasMyResourceInitialed()) {
+			// normal way
+			// Bitmap b = (Bitmap) mDataSource.get();
+			// if (b != null) {
+			// this.setImageBitmap(b);
+			// }
+
+			// task way
+			MyImageViewAsyncTask task = new MyImageViewAsyncTask();
+			task.execute(new Object[] { this, mDataSource });
+
 			myResourceInitialed = true;
 		}
 	}
 
 	@Override
 	public synchronized void releaseMyResource() {
-		if (mDataSource != null) {
+		this.setImageBitmap(noPictureBitmap);
+
+		if (mDataSource != null && hasMyResourceInitialed()) {
 			mDataSource.drop();
 			myResourceInitialed = false;
 		}
-
-		this.setImageBitmap(noPictureBitmap);
 	}
 
 	@Override
@@ -78,6 +108,11 @@ public class MyImageViewWithCache extends ImageView implements
 	@Override
 	public void setEnableMyPersistentCache(boolean flag) {
 		this.myPersistentCacheEnabled = flag;
+		if (flag) {
+			initMyResource();
+		} else {
+			releaseMyResource();
+		}
 	}
 
 	@Override

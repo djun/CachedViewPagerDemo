@@ -4,8 +4,9 @@
 
 
 2014-3-22
-1. Update MyViewPager. Change implement of OnPageChangeListener in MyPageViewer to a private variable. Fix some bugs.
+1. Update MyViewPager. Change implement of OnPageChangeListener in MyPageViewer to a private variable. Add MyImageViewAsyncTask class for loading resource. Fix some bugs.
 2. Update MainActivity. Make it can show pictures smoothly.
+3. The class "MyViewPager" extended from ViewPager may not be a very suitable demo for this cache mechanism, in here i just want to show all of you that how to apply the cache mechanism in your codes.
 
 2014-3-21
 1. Updated. Add some more Bitmap Source (from drawables, raw, or file url) implementing MyDataSource.
