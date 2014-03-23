@@ -2,6 +2,9 @@
 	This demo is created by DJun, which can provide a ViewPager with resource
  used in every page limitedly cached (3 pages cached mechanism).
 
+2014-3-23
+1. Minor improvement.
+2. I have tested this cache mechanism on BaseAdapter for Gallery and it shown a very good performance. I will make a demo by using Gallery with BaseAdapter at a later time.
 
 2014-3-22
 1. Update MyViewPager. Change implement of OnPageChangeListener in MyPageViewer to a private variable. Add MyImageViewAsyncTask class for loading resource. Fix some bugs.

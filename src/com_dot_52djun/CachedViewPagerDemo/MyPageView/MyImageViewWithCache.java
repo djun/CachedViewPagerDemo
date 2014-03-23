@@ -14,6 +14,7 @@ public class MyImageViewWithCache extends ImageView implements
 
 	private MyDataSource mDataSource;
 	private boolean myResourceInitialed = false;
+	private boolean myPersistentCacheEnabled = false;
 	private Bitmap noPictureBitmap;
 
 	private class MyImageViewAsyncTask extends AsyncTask<Object, Void, Bitmap> {
@@ -63,14 +64,18 @@ public class MyImageViewWithCache extends ImageView implements
 		this.noPictureBitmap = noPictureBitmap;
 	}
 
-	private boolean myPersistentCacheEnabled = false;
-
+	@Override
 	public void setMyDataSource(MyDataSource source) {
 		releaseMyResource();
 		this.mDataSource = source;
-		if (myPersistentCacheEnabled) {
+		if (isMyPersistentCacheEnabled()) {
 			initMyResource();
 		}
+	}
+
+	@Override
+	public MyDataSource getMyDataSource() {
+		return this.mDataSource;
 	}
 
 	@Override

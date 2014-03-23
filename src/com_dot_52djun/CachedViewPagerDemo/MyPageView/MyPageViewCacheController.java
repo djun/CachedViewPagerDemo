@@ -1,7 +1,15 @@
 //(c)Copyright.2014.DJun.2014-3-20 Project Created.
 package com_dot_52djun.CachedViewPagerDemo.MyPageView;
 
+import com_dot_52djun.CachedViewPagerDemo.MyDataSource.MyDataSource;
+
 public interface MyPageViewCacheController {
+
+	// set my data source related to this controller
+	public void setMyDataSource(MyDataSource source);
+
+	// get my data source related to this controller
+	public MyDataSource getMyDataSource();
 
 	// use this method to pre-initial resources before show a page (with
 	// MyDataSource recommended).
